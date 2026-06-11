@@ -112,7 +112,7 @@ export default async function VCardPublicPage({
         <div className="flex-grow flex flex-col">
           {/* Cabecera / Banner Superior con Centrado Absoluto y Altura Balanceada */}
           <div
-            className="relative pt-8 pb-6 flex flex-col items-center justify-center text-center px-6 transition-colors duration-300 md:rounded-t-3xl bg-cover bg-center overflow-hidden shrink-0"
+            className="relative pt-8 pb-10 flex flex-col items-center justify-center text-center px-6 transition-colors duration-300 md:rounded-t-3xl bg-cover bg-center overflow-hidden shrink-0"
             style={{ 
               backgroundColor: themeColor,
               backgroundImage: social.header_bg_url ? `url(${social.header_bg_url})` : undefined
@@ -281,27 +281,24 @@ export default async function VCardPublicPage({
                 </div>
               )}
 
-              {/* Ubicación (Con alineación superior para textos largos) */}
+              {/* Ubicación (Fila completa clicable) */}
               {vcard.address && (
-                <div className="flex items-start gap-3.5 py-3 px-5 border-b border-slate-100/60 last:border-0 hover:bg-slate-50/40 transition-colors">
-                  <div className="h-9 w-9 rounded-full bg-slate-50 border border-slate-100/60 flex items-center justify-center text-slate-500 shrink-0 mt-0.5">
-                    <MapPin className="h-4 w-4 text-slate-500" />
+                <a
+                  href={mapsUrl || ''}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-3.5 py-3 px-5 border-b border-slate-100/60 last:border-0 hover:bg-slate-50/40 transition-colors cursor-pointer group/map"
+                >
+                  <div className="h-9 w-9 rounded-full bg-slate-50 border border-slate-100/60 flex items-center justify-center text-slate-500 shrink-0 mt-0.5 transition-colors group-hover/map:bg-slate-100">
+                    <MapPin className="h-4 w-4" style={{ color: themeColor }} />
                   </div>
                   <div className="overflow-hidden flex-grow">
                     <span className="text-xs text-slate-400 font-semibold block mb-0.5">Ubicación</span>
-                    <span className="text-sm font-bold text-slate-800 block leading-relaxed pr-2">
+                    <span className="text-sm font-bold text-slate-800 block leading-relaxed pr-2 group-hover/map:underline">
                       {vcard.address}
                     </span>
-                    <a
-                      href={mapsUrl || ''}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center mt-2.5 px-3 py-1 rounded-full bg-slate-50 border border-slate-100 text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-colors"
-                    >
-                      Mostrar en el mapa
-                    </a>
                   </div>
-                </div>
+                </a>
               )}
 
 
@@ -346,17 +343,12 @@ export default async function VCardPublicPage({
         {/* Marca de agua elegante al final de la pantalla (Sticky Footer) */}
         <div className="py-6 border-t border-slate-100 bg-white text-center z-10 md:rounded-b-3xl mt-auto flex items-center justify-center px-6">
           {vcard.company_logo_url ? (
-            <div className="flex flex-col items-center justify-center gap-3 w-full">
+            <div className="flex flex-col items-center justify-center w-full">
               <img
                 src={vcard.company_logo_url}
                 alt={vcard.company || 'Logo de la Organización'}
                 className="h-16 max-w-[200px] object-contain transition-all hover:scale-105"
               />
-              {vcard.company && (
-                <span className="text-sm font-black text-slate-500 uppercase tracking-widest block">
-                  {vcard.company}
-                </span>
-              )}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center gap-1.5 w-full">
