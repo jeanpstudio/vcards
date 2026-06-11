@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Outfit, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const fontSans = Inter({
+const fontSans = Outfit({
   variable: "--font-sans",
   subsets: ["latin"],
 });
@@ -24,8 +24,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${fontSans.variable} ${fontMono.variable} h-full antialiased dark`}
+      lang="es"
+      className={`${fontSans.variable} ${fontMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

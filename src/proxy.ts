@@ -1,15 +1,15 @@
 import { type NextRequest } from 'next/server'
 import { updateSession } from '@/utils/supabase/middleware'
 
-export async function middleware(request: NextRequest) {
-  // Simplemente redirigimos la petición al helper de Supabase SSR
+export async function proxy(request: NextRequest) {
+  // Redirigimos la petición al helper de Supabase SSR
   return await updateSession(request)
 }
 
 export const config = {
   matcher: [
     /*
-     * Intercepta todas las peticiones excuyendo:
+     * Intercepta todas las peticiones excluyendo:
      * - _next/static (archivos estáticos)
      * - _next/image (optimización de imágenes)
      * - favicon.ico (icono del sitio)
