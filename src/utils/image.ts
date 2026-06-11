@@ -1,9 +1,8 @@
-// @ts-expect-error - sharp type exports resolving issue in Next.js tsconfig
-import sharp from 'sharp'
+import { Jimp } from 'jimp'
 import { createClient } from '@/utils/supabase/server'
 
 /**
- * Recibe un objeto File (de un formulario), lo redimensiona y optimiza a WebP con Sharp,
+ * Recibe un objeto File (de un formulario), lo redimensiona y optimiza a JPEG con Jimp,
  * y lo sube al bucket 'vcard-images' de Supabase Storage.
  * Retorna la URL pública de la imagen subida.
  */
@@ -19,43 +18,40 @@ export async function uploadAndOptimizeImage(
 
   try {
     const buffer = Buffer.from(await file.arrayBuffer())
-    let sharpInstance = sharp(buffer)
+    const image = await Jimp.read(buffer)
 
     if (type === 'avatar') {
       // Foto de perfil: recortar en cuadrado 400x400
-      sharpInstance = sharpInstance.resize(400, 400, {
-        fit: 'cover',
-        position: 'center'
-      })
+      image.cover({ w: 400, h: 400 })
     } else if (type === 'logo') {
       // Logo corporativo: redimensionar a max 500x250 conservando aspecto
-      sharpInstance = sharpInstance.resize(500, 250, {
-        fit: 'inside',
-        withoutEnlargement: true
-      })
+      const maxWidth = 500
+      const maxHeight = 250
+      if (image.width > maxWidth || image.height > maxHeight) {
+        image.scaleToFit({ w: maxWidth, h: maxHeight })
+      }
     } else {
       // Fondo de portada: redimensionar a max 1200x600 conservando aspecto
-      sharpInstance = sharpInstance.resize(1200, 600, {
-        fit: 'inside',
-        withoutEnlargement: true
-      })
+      const maxWidth = 1200
+      const maxHeight = 600
+      if (image.width > maxWidth || image.height > maxHeight) {
+        image.scaleToFit({ w: maxWidth, h: maxHeight })
+      }
     }
 
-    // Convertir a WebP y comprimir a calidad 80
-    const optimizedBuffer = await sharpInstance
-      .webp({ quality: 80 })
-      .toBuffer()
+    // Convertir a JPEG y comprimir con calidad 80
+    const optimizedBuffer = await image.getBuffer('image/jpeg', { quality: 80 })
 
     const supabase = await createClient()
     
     // Generar ruta de archivo única estructurada por ID de usuario
-    const fileName = `${userId}/${type}_${Date.now()}.webp`
+    const fileName = `${userId}/${type}_${Date.now()}.jpg`
 
     // Subir a Supabase Storage
     const { data, error } = await supabase.storage
       .from('vcard-images')
       .upload(fileName, optimizedBuffer, {
-        contentType: 'image/webp',
+        contentType: 'image/jpeg',
         cacheControl: '31536000', // Cache por 1 año
         upsert: true
       })
