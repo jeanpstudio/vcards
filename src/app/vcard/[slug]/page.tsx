@@ -304,31 +304,7 @@ export default async function VCardPublicPage({
                 </div>
               )}
 
-              {/* Empresa / Cargo */}
-              {(vcard.company || vcard.job_title) && (
-                <div className="flex items-center gap-3.5 py-2.5 px-5 border-b border-slate-100/60 last:border-0 hover:bg-slate-50/40 transition-colors">
-                  <div className="h-8 w-8 rounded-full bg-slate-50 border border-slate-100/60 flex items-center justify-center text-slate-500 shrink-0">
-                    {vcard.company_logo_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={vcard.company_logo_url}
-                        alt={vcard.company || 'Logo'}
-                        className="w-full h-full object-contain p-1 rounded-full"
-                      />
-                    ) : (
-                      <Briefcase className="h-3.5 w-3.5 text-slate-500" />
-                    )}
-                  </div>
-                  <div className="overflow-hidden">
-                    <span className="text-[10px] text-slate-400 font-medium block mb-0.5">
-                      {vcard.company || 'Empresa'}
-                    </span>
-                    <span className="text-xs font-bold text-slate-800 block truncate">
-                      {vcard.job_title || 'Colaborador'}
-                    </span>
-                  </div>
-                </div>
-              )}
+
 
             </div>
 
@@ -368,19 +344,31 @@ export default async function VCardPublicPage({
         </div>
 
         {/* Marca de agua elegante al final de la pantalla (Sticky Footer) */}
-        <div className="py-4 border-t border-slate-100 bg-white text-center z-10 md:rounded-b-3xl mt-auto flex items-center justify-center min-h-[56px] px-6">
+        <div className="py-6 border-t border-slate-100 bg-white text-center z-10 md:rounded-b-3xl mt-auto flex items-center justify-center px-6">
           {vcard.company_logo_url ? (
-            <div className="flex items-center justify-center w-full">
+            <div className="flex flex-col items-center justify-center gap-3 w-full">
               <img
                 src={vcard.company_logo_url}
                 alt={vcard.company || 'Logo de la Organización'}
-                className="h-8 max-w-[160px] object-contain transition-all hover:scale-105"
+                className="h-16 max-w-[200px] object-contain transition-all hover:scale-105"
               />
+              {vcard.company && (
+                <span className="text-xs font-black text-slate-500 uppercase tracking-widest block">
+                  {vcard.company}
+                </span>
+              )}
             </div>
           ) : (
-            <span className="text-[9px] text-slate-400 tracking-widest uppercase font-bold">
-              Generado con vCard Studio
-            </span>
+            <div className="flex flex-col items-center justify-center gap-1.5 w-full">
+              {vcard.company && (
+                <span className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-1">
+                  {vcard.company}
+                </span>
+              )}
+              <span className="text-[9px] text-slate-400 tracking-widest uppercase font-bold">
+                Generado con vCard Studio
+              </span>
+            </div>
           )}
         </div>
 

@@ -39,19 +39,28 @@ export async function uploadAndOptimizeImage(
       }
     }
 
-    // Convertir a JPEG y comprimir con calidad 80
-    const optimizedBuffer = await image.getBuffer('image/jpeg', { quality: 80 })
+    // Determinar formato, buffer y tipo de contenido según el tipo
+    let optimizedBuffer: Buffer
+    let fileName: string
+    let contentType: string
+
+    if (type === 'logo') {
+      optimizedBuffer = await image.getBuffer('image/png')
+      fileName = `${userId}/${type}_${Date.now()}.png`
+      contentType = 'image/png'
+    } else {
+      optimizedBuffer = await image.getBuffer('image/jpeg', { quality: 80 })
+      fileName = `${userId}/${type}_${Date.now()}.jpg`
+      contentType = 'image/jpeg'
+    }
 
     const supabase = await createClient()
-    
-    // Generar ruta de archivo única estructurada por ID de usuario
-    const fileName = `${userId}/${type}_${Date.now()}.jpg`
 
     // Subir a Supabase Storage
     const { data, error } = await supabase.storage
       .from('vcard-images')
       .upload(fileName, optimizedBuffer, {
-        contentType: 'image/jpeg',
+        contentType,
         cacheControl: '31536000', // Cache por 1 año
         upsert: true
       })
