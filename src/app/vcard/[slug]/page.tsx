@@ -112,7 +112,7 @@ export default async function VCardPublicPage({
         <div className="flex-grow flex flex-col">
           {/* Cabecera / Banner Superior con Centrado Absoluto y Altura Balanceada */}
           <div
-            className="relative pt-12 pb-8 flex flex-col items-center justify-center text-center px-6 transition-colors duration-300 md:rounded-t-3xl bg-cover bg-center overflow-hidden shrink-0"
+            className="relative pt-8 pb-6 flex flex-col items-center justify-center text-center px-6 transition-colors duration-300 md:rounded-t-3xl bg-cover bg-center overflow-hidden shrink-0"
             style={{ 
               backgroundColor: themeColor,
               backgroundImage: social.header_bg_url ? `url(${social.header_bg_url})` : undefined
@@ -132,7 +132,7 @@ export default async function VCardPublicPage({
             {/* Contenido del header flotado sobre el overlay */}
             <div className="relative z-10 flex flex-col items-center justify-center">
               {/* Foto de Perfil circular */}
-              <div className="w-20 h-20 rounded-full border-4 border-white overflow-hidden shadow-xl flex items-center justify-center bg-white/10 mb-3 shrink-0">
+              <div className="w-24 h-24 rounded-full border-4 border-white overflow-hidden shadow-xl flex items-center justify-center bg-white/10 mb-3 shrink-0">
                 {vcard.profile_image_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
