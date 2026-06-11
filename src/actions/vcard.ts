@@ -211,3 +211,82 @@ export async function deleteVCard(id: string): Promise<{ success?: boolean; erro
     return { error: `Error interno al eliminar: ${error.message || error}` }
   }
 }
+
+/**
+ * Server Action para duplicar una vCard existente.
+ */
+export async function duplicateVCard(id: string): Promise<{ success?: boolean; error?: string }> {
+  try {
+    const supabase = await createClient()
+    
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return { error: 'No estás autorizado.' }
+    }
+
+    // 1. Obtener los datos de la vCard original
+    const { data: original, error: fetchError } = await supabase
+      .from('vcards')
+      .select('*')
+      .eq('id', id)
+      .eq('user_id', user.id)
+      .single()
+
+    if (fetchError || !original) {
+      return { error: 'No se pudo encontrar la vCard original o no tienes permiso.' }
+    }
+
+    // 2. Generar un slug único basado en el original
+    let newSlug = `${original.slug}-copy`
+    let unique = false
+    let counter = 1
+    while (!unique) {
+      const { data: existing } = await supabase
+        .from('vcards')
+        .select('id')
+        .eq('slug', newSlug)
+        .maybeSingle()
+      if (!existing) {
+        unique = true
+      } else {
+        newSlug = `${original.slug}-copy-${counter}`
+        counter++
+      }
+    }
+
+    // 3. Crear el payload de la copia
+    const payload = {
+      user_id: user.id,
+      slug: newSlug,
+      first_name: `${original.first_name} (Copia)`,
+      last_name: original.last_name,
+      job_title: original.job_title,
+      company: original.company,
+      email: original.email,
+      phone: original.phone,
+      whatsapp: original.whatsapp,
+      website: original.website,
+      address: original.address,
+      profile_image_url: original.profile_image_url,
+      company_logo_url: original.company_logo_url,
+      theme_color: original.theme_color || '#24744C',
+      bio: original.bio,
+      social_links: original.social_links
+    }
+
+    // 4. Insertar la nueva vCard
+    const { error: insertError } = await supabase
+      .from('vcards')
+      .insert(payload)
+
+    if (insertError) {
+      return { error: `Error al crear la copia: ${insertError.message}` }
+    }
+
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (error: any) {
+    console.error('Error in duplicateVCard:', error)
+    return { error: `Error interno al duplicar: ${error.message || error}` }
+  }
+}

@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import CopyButton from './CopyButton'
 import DeleteButton from './DeleteButton'
+import DuplicateButton from './DuplicateButton'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -247,6 +248,9 @@ export default async function DashboardPage() {
                     </div>
 
                     <div className="flex items-center gap-2">
+                      {/* Duplicar */}
+                      <DuplicateButton id={vcard.id} />
+
                       {/* Editar */}
                       <Link
                         href={`/dashboard/edit/${vcard.id}`}
