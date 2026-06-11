@@ -19,6 +19,9 @@ CREATE TABLE IF NOT EXISTS public.vcards (
     address TEXT,
     profile_image_url TEXT,
     company_logo_url TEXT,
+    theme_color TEXT DEFAULT '#24744C',
+    bio TEXT,
+    social_links JSONB DEFAULT '{}'::jsonb,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
