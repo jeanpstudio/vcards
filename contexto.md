@@ -71,9 +71,26 @@ Este archivo sirve para registrar de forma continua las decisiones arquitectóni
   - **Sitio Web**: Enlace a la URL externa.
   - **Botón Destacado Flotante**: Enlace directo al endpoint de descarga de VCF para añadir el contacto a la agenda del móvil con un solo clic.
 
+### 7. Diseños de Impresión Física y PDF
+- **Ruta**: `/dashboard/print/[id]`.
+- **Componentes**: 
+  - `PrintTab.tsx`: Pestaña interactiva en el Dashboard para previsualizar los formatos físicos en pantalla, gestionar la carga del fondo de la contracara e iniciar el proceso de impresión.
+  - `PrintControls.tsx`: Controles cliente flotantes no imprimibles para disparar `window.print()` nativo y cerrar la pestaña.
+- **Formatos Físicos de Impresión**:
+  - **Fotosheck (Credencial)**: Orientación vertical de `54mm x 86mm`. Muestra foto de perfil circular, nombre grande, cargo, código QR y logo de empresa en el footer.
+  - **Tarjeta de Presentación**: Orientación horizontal de `85mm x 55mm` a doble cara. El frente contiene la foto, datos de contacto y QR, y el dorso muestra el logo, el sitio web y permite una imagen de fondo de contracara personalizada.
+- **Configuración de Impresión por CSS**:
+  - Utiliza reglas `@page` dinámicas basadas en el formato y consultas `@media print` para ocultar controles interactivos, forzar colores de fondo (`print-color-adjust: exact`) y establecer cortes de página perfectos.
+
 ---
 
 ## 📅 Registro de Cambios
+
+### [2026-06-12] - Diseños de Impresión Física y Exportación PDF
+- **Base de Datos**: Agregada columna `card_back_bg_url` a la tabla `vcards` para almacenar fondos personalizados del reverso de la tarjeta.
+- **Acciones y Utilidades**: Implementado soporte para tipo de imagen `'card_bg'` (procesado con Jimp a `1016x638` píxeles) y server actions `updateCardBackBg` y `deleteCardBackBg` para gestionar el fondo.
+- **Panel de Administración (Dashboard)**: Integrado sistema de pestañas interactivo (`?tab=digital` y `?tab=print`) con selector de vCards, previsualizaciones a escala real con colores derivados (original, claro y oscuro en HSL) y cargador de fondo.
+- **Ruta de Impresión**: Creado [`src/app/dashboard/print/[id]/page.tsx`] con soporte para `?type=badge` y `?type=card` aplicando estilos CSS milimétricos exactos para impresión nativa sin librerías pesadas y con auto-disparo de `window.print()`.
 
 ### [2026-06-11] - Lanzamiento Inicial
 - Creación de base de datos (`supabase_schema.sql`).
@@ -102,7 +119,3 @@ Este archivo sirve para registrar de forma continua las decisiones arquitectóni
 - **Botones de Acción Rápida**: Se añadieron márgenes verticales holgados (`mt-8 mb-8`) al contenedor de los 3 botones flotantes y se implementó una animación hover elegante (`hover:scale-110 hover:shadow-lg transition-all duration-300 ease-out`).
 - **Filas de Contacto**: Se duplicó el padding vertical (`py-6`) y se incrementó el padding horizontal un 50% (`px-6`) en las celdas de la ficha de contacto, separando la estructura mediante dividers suaves y añadiendo efectos reactivos de hover (`hover:bg-slate-50/30`).
 - **Redes Dinámicas y Adaptabilidad**: Los enlaces sociales se renderizan dinámicamente según lo configurado, con sus colores e iconos oficiales correspondientes. Además, el diseño se optimizó con clases móviles nativas (`w-full min-h-screen` en pantallas pequeñas sin bordes para calzar al 100% y `sm:rounded-3xl sm:border sm:shadow-2xl` en pantallas de escritorio).
-
-
-
-

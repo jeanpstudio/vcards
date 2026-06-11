@@ -271,7 +271,8 @@ export async function duplicateVCard(id: string): Promise<{ success?: boolean; e
       company_logo_url: original.company_logo_url,
       theme_color: original.theme_color || '#24744C',
       bio: original.bio,
-      social_links: original.social_links
+      social_links: original.social_links,
+      card_back_bg_url: original.card_back_bg_url
     }
 
     // 4. Insertar la nueva vCard
@@ -288,5 +289,77 @@ export async function duplicateVCard(id: string): Promise<{ success?: boolean; e
   } catch (error: any) {
     console.error('Error in duplicateVCard:', error)
     return { error: `Error interno al duplicar: ${error.message || error}` }
+  }
+}
+
+/**
+ * Server Action para actualizar la imagen de fondo de la contracara de la tarjeta.
+ */
+export async function updateCardBackBg(vcardId: string, formData: FormData): Promise<{ success?: boolean; error?: string; url?: string }> {
+  try {
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return { error: 'No estás autenticado.' }
+    }
+
+    const file = formData.get('card_back_bg_file') as File | null
+    if (!file || file.size === 0) {
+      return { error: 'No se ha subido ningún archivo.' }
+    }
+
+    // Subir e integrar usando la utilidad image.ts
+    const uploadedUrl = await uploadAndOptimizeImage(file, 'card_bg', user.id)
+    if (!uploadedUrl) {
+      return { error: 'Error al procesar o subir la imagen.' }
+    }
+
+    // Actualizar la vCard en Supabase
+    const { error: updateError } = await supabase
+      .from('vcards')
+      .update({ card_back_bg_url: uploadedUrl })
+      .eq('id', vcardId)
+      .eq('user_id', user.id)
+
+    if (updateError) {
+      return { error: `Error al actualizar la base de datos: ${updateError.message}` }
+    }
+
+    revalidatePath('/dashboard')
+    return { success: true, url: uploadedUrl }
+  } catch (error: any) {
+    console.error('Error in updateCardBackBg:', error)
+    return { error: `Error interno al subir el fondo: ${error.message || error}` }
+  }
+}
+
+/**
+ * Server Action para eliminar la imagen de fondo de la contracara de la tarjeta.
+ */
+export async function deleteCardBackBg(vcardId: string): Promise<{ success?: boolean; error?: string }> {
+  try {
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return { error: 'No estás autenticado.' }
+    }
+
+    const { error: updateError } = await supabase
+      .from('vcards')
+      .update({ card_back_bg_url: null })
+      .eq('id', vcardId)
+      .eq('user_id', user.id)
+
+    if (updateError) {
+      return { error: `Error al eliminar de la base de datos: ${updateError.message}` }
+    }
+
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (error: any) {
+    console.error('Error in deleteCardBackBg:', error)
+    return { error: `Error interno al eliminar el fondo: ${error.message || error}` }
   }
 }

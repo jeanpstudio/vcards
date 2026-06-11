@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS public.vcards (
     theme_color TEXT DEFAULT '#24744C',
     bio TEXT,
     social_links JSONB DEFAULT '{}'::jsonb,
+    card_back_bg_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
