@@ -149,13 +149,13 @@ export default async function VCardPublicPage({
               </div>
 
               {/* Nombre de gran formato */}
-              <h1 className="text-xl font-black text-white tracking-tight leading-tight px-2">
+              <h1 className="text-2xl font-black text-white tracking-tight leading-tight px-2">
                 {vcard.first_name} {vcard.last_name}
               </h1>
               
               {/* Cargo Limpio (Texto plano en tamaño medio-alto según captura) */}
               {vcard.job_title && (
-                <p className="text-xs font-medium text-white/90 tracking-wide mt-1 px-4 max-w-full">
+                <p className="text-sm font-medium text-white/90 tracking-wide mt-1 px-4 max-w-full">
                   {vcard.job_title}
                 </p>
               )}
@@ -218,16 +218,16 @@ export default async function VCardPublicPage({
             {/* Botón Principal: Guardar en Contactos con Alto Impacto y Animación */}
             <a
               href={`/api/vcard/${slug}/download`}
-              className="w-full h-11 text-white font-extrabold text-xs rounded-2xl flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 cursor-pointer"
+              className="w-full h-11 text-white font-extrabold text-sm rounded-2xl flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 cursor-pointer"
               style={{ backgroundColor: themeColor }}
             >
-              <UserPlus className="h-4 w-4" />
+              <UserPlus className="h-4.5 w-4.5" />
               Añadir contacto
             </a>
 
             {/* Biografía / Descripción corta */}
             {vcard.bio && (
-              <p className="text-center text-[11px] text-slate-500 font-medium px-4 leading-relaxed my-0.5">
+              <p className="text-center text-xs text-slate-500 font-medium px-4 leading-relaxed my-4">
                 {vcard.bio}
               </p>
             )}
@@ -237,43 +237,43 @@ export default async function VCardPublicPage({
               
               {/* Celular */}
               {vcard.phone && (
-                <div className="flex items-center gap-3.5 py-2.5 px-5 border-b border-slate-100/60 last:border-0 hover:bg-slate-50/40 transition-colors">
-                  <div className="h-8 w-8 rounded-full bg-slate-50 border border-slate-100/60 flex items-center justify-center text-slate-500 shrink-0">
-                    <Phone className="h-3.5 w-3.5 text-slate-500" />
+                <div className="flex items-center gap-3.5 py-3 px-5 border-b border-slate-100/60 last:border-0 hover:bg-slate-50/40 transition-colors">
+                  <div className="h-9 w-9 rounded-full bg-slate-50 border border-slate-100/60 flex items-center justify-center text-slate-500 shrink-0">
+                    <Phone className="h-4 w-4 text-slate-500" />
                   </div>
                   <div className="overflow-hidden">
-                    <span className="text-[10px] text-slate-400 font-medium block mb-0.5">Celular</span>
-                    <span className="text-xs font-bold text-slate-800 block">{vcard.phone}</span>
+                    <span className="text-xs text-slate-400 font-semibold block mb-0.5">Celular</span>
+                    <span className="text-sm font-bold text-slate-800 block">{vcard.phone}</span>
                   </div>
                 </div>
               )}
 
               {/* Correo */}
               {vcard.email && (
-                <div className="flex items-center gap-3.5 py-2.5 px-5 border-b border-slate-100/60 last:border-0 hover:bg-slate-50/40 transition-colors">
-                  <div className="h-8 w-8 rounded-full bg-slate-50 border border-slate-100/60 flex items-center justify-center text-slate-500 shrink-0">
-                    <Mail className="h-3.5 w-3.5 text-slate-500" />
+                <div className="flex items-center gap-3.5 py-3 px-5 border-b border-slate-100/60 last:border-0 hover:bg-slate-50/40 transition-colors">
+                  <div className="h-9 w-9 rounded-full bg-slate-50 border border-slate-100/60 flex items-center justify-center text-slate-500 shrink-0">
+                    <Mail className="h-4 w-4 text-slate-500" />
                   </div>
                   <div className="overflow-hidden">
-                    <span className="text-[10px] text-slate-400 font-medium block mb-0.5">Email</span>
-                    <span className="text-xs font-bold text-slate-800 block truncate">{vcard.email}</span>
+                    <span className="text-xs text-slate-400 font-semibold block mb-0.5">Email</span>
+                    <span className="text-sm font-bold text-slate-800 block truncate">{vcard.email}</span>
                   </div>
                 </div>
               )}
 
               {/* Web */}
               {vcard.website && (
-                <div className="flex items-center gap-3.5 py-2.5 px-5 border-b border-slate-100/60 last:border-0 hover:bg-slate-50/40 transition-colors">
-                  <div className="h-8 w-8 rounded-full bg-slate-50 border border-slate-100/60 flex items-center justify-center text-slate-500 shrink-0">
-                    <Globe className="h-3.5 w-3.5 text-slate-500" />
+                <div className="flex items-center gap-3.5 py-3 px-5 border-b border-slate-100/60 last:border-0 hover:bg-slate-50/40 transition-colors">
+                  <div className="h-9 w-9 rounded-full bg-slate-50 border border-slate-100/60 flex items-center justify-center text-slate-500 shrink-0">
+                    <Globe className="h-4 w-4 text-slate-500" />
                   </div>
                   <div className="overflow-hidden">
-                    <span className="text-[10px] text-slate-400 font-medium block mb-0.5">Web</span>
+                    <span className="text-xs text-slate-400 font-semibold block mb-0.5">Web</span>
                     <a
                       href={websiteUrl || ''}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs font-bold text-slate-800 block truncate hover:underline hover:text-emerald-700 transition-colors"
+                      className="text-sm font-bold text-slate-800 block truncate hover:underline hover:text-emerald-700 transition-colors"
                     >
                       {vcard.website}
                     </a>
@@ -283,20 +283,20 @@ export default async function VCardPublicPage({
 
               {/* Ubicación (Con alineación superior para textos largos) */}
               {vcard.address && (
-                <div className="flex items-start gap-3.5 py-2.5 px-5 border-b border-slate-100/60 last:border-0 hover:bg-slate-50/40 transition-colors">
-                  <div className="h-8 w-8 rounded-full bg-slate-50 border border-slate-100/60 flex items-center justify-center text-slate-500 shrink-0 mt-0.5">
-                    <MapPin className="h-3.5 w-3.5 text-slate-500" />
+                <div className="flex items-start gap-3.5 py-3 px-5 border-b border-slate-100/60 last:border-0 hover:bg-slate-50/40 transition-colors">
+                  <div className="h-9 w-9 rounded-full bg-slate-50 border border-slate-100/60 flex items-center justify-center text-slate-500 shrink-0 mt-0.5">
+                    <MapPin className="h-4 w-4 text-slate-500" />
                   </div>
                   <div className="overflow-hidden flex-grow">
-                    <span className="text-[10px] text-slate-400 font-medium block mb-0.5">Ubicación</span>
-                    <span className="text-xs font-bold text-slate-800 block leading-relaxed pr-2">
+                    <span className="text-xs text-slate-400 font-semibold block mb-0.5">Ubicación</span>
+                    <span className="text-sm font-bold text-slate-800 block leading-relaxed pr-2">
                       {vcard.address}
                     </span>
                     <a
                       href={mapsUrl || ''}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center mt-2 px-3 py-1 rounded-full bg-slate-50 border border-slate-100 text-[9px] font-bold text-slate-600 hover:bg-slate-100 transition-colors"
+                      className="inline-flex items-center mt-2.5 px-3 py-1 rounded-full bg-slate-50 border border-slate-100 text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-colors"
                     >
                       Mostrar en el mapa
                     </a>
@@ -310,8 +310,8 @@ export default async function VCardPublicPage({
 
             {/* Redes Sociales Dinámicas "Encuéntreme en" */}
             {activeSocials.length > 0 && (
-              <div className="space-y-3 pt-1">
-                <h3 className="text-xs font-bold text-slate-800 tracking-tight pl-1">
+              <div className="space-y-3.5 pt-1">
+                <h3 className="text-sm font-bold text-slate-800 tracking-tight pl-1">
                   Encuéntreme en
                 </h3>
 
@@ -324,15 +324,15 @@ export default async function VCardPublicPage({
                         href={cleanUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-between p-3 bg-white border border-slate-100/80 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:bg-slate-50/60 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 cursor-pointer"
+                        className="flex items-center justify-between p-3.5 bg-white border border-slate-100/80 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:bg-slate-50/60 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 cursor-pointer"
                       >
-                        <div className="flex items-center gap-3">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${platform.iconBg} ${platform.iconColor}`}>
+                        <div className="flex items-center gap-3.5">
+                          <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${platform.iconBg} ${platform.iconColor}`}>
                             {platform.icon}
                           </div>
-                          <span className="text-xs font-bold text-slate-800">{platform.name}</span>
+                          <span className="text-sm font-bold text-slate-800">{platform.name}</span>
                         </div>
-                        <ChevronRight className="h-4 w-4 text-slate-400" />
+                        <ChevronRight className="h-4.5 w-4.5 text-slate-400" />
                       </a>
                     )
                   })}
@@ -353,7 +353,7 @@ export default async function VCardPublicPage({
                 className="h-16 max-w-[200px] object-contain transition-all hover:scale-105"
               />
               {vcard.company && (
-                <span className="text-xs font-black text-slate-500 uppercase tracking-widest block">
+                <span className="text-sm font-black text-slate-500 uppercase tracking-widest block">
                   {vcard.company}
                 </span>
               )}
@@ -361,11 +361,11 @@ export default async function VCardPublicPage({
           ) : (
             <div className="flex flex-col items-center justify-center gap-1.5 w-full">
               {vcard.company && (
-                <span className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-1">
+                <span className="text-sm font-black text-slate-500 uppercase tracking-widest block mb-1">
                   {vcard.company}
                 </span>
               )}
-              <span className="text-[9px] text-slate-400 tracking-widest uppercase font-bold">
+              <span className="text-[10px] text-slate-400 tracking-widest uppercase font-bold">
                 Generado con vCard Studio
               </span>
             </div>
