@@ -94,8 +94,8 @@ export default async function DashboardPage({
               <QrCode className="h-5 w-5" />
             </div>
             <div>
-              <span className="font-extrabold text-lg text-slate-900 tracking-tight block">vCard Studio</span>
-              <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold block">SaaS Privado</span>
+              <span className="font-extrabold text-lg text-slate-900 tracking-tight block">Generador de QR</span>
+              <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold block">by JeanP Studio</span>
             </div>
           </div>
 

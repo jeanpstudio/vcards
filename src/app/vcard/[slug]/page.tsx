@@ -358,7 +358,7 @@ export default async function VCardPublicPage({
                 </span>
               )}
               <span className="text-[10px] text-slate-400 tracking-widest uppercase font-bold">
-                Generado con vCard Studio
+                Generador de QR by JeanP Studio
               </span>
             </div>
           )}
