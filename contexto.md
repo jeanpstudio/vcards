@@ -81,6 +81,9 @@ Este archivo sirve para registrar de forma continua las decisiones arquitectóni
 
 ## 📅 Registro de Cambios
 
+### [2026-06-12] - Títulos Dinámicos de Pestaña para vCards
+- **Título de Pestaña Personalizado**: Se implementó `generateMetadata` en la página pública de vCard [`src/app/vcard/[slug]/page.tsx`](file:///Users/jeanpstudio/Desktop/Apps/vcards/src/app/vcard/[slug]/page.tsx) para que el título del navegador muestre dinámicamente `Nombre Completo - Organización` (por ejemplo, "Ani Luna - Acción Andina") en lugar del título genérico del generador de QR.
+
 ### [2026-06-12] - Simplificación del Panel, Bloqueo de Slug y Color Manual
 - **Eliminación de Imprimibles**: Removido por completo el módulo de impresión de Fotosheck y Tarjetas de Presentación físicas (rutas `/print/[id]`, componente `PrintTab.tsx` y Server Actions asociadas). El Dashboard ahora muestra directamente la lista de Tarjetas Digitales.
 - **Bloqueo Inteligente de Slug**: Se protegió el slug de la vCard durante la edición mediante un bloqueo por defecto y popup de confirmación/advertencia si se desea desbloquear (para proteger la vigencia de códigos QR compartidos/impresos).
