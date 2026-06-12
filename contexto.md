@@ -85,6 +85,7 @@ Este archivo sirve para registrar de forma continua las decisiones arquitectóni
 - **Eliminación de Imprimibles**: Removido por completo el módulo de impresión de Fotosheck y Tarjetas de Presentación físicas (rutas `/print/[id]`, componente `PrintTab.tsx` y Server Actions asociadas). El Dashboard ahora muestra directamente la lista de Tarjetas Digitales.
 - **Bloqueo Inteligente de Slug**: Se protegió el slug de la vCard durante la edición mediante un bloqueo por defecto y popup de confirmación/advertencia si se desea desbloquear (para proteger la vigencia de códigos QR compartidos/impresos).
 - **Selector de Color Hexadecimal**: Se reemplazó el texto estático de color por un `<input type="text">` editable al lado del picker visual, permitiendo la personalización con códigos de color exactos en el formulario de creación/edición.
+- **Límite de Carga de Imágenes (Server Actions)**: Se configuró `experimental.serverActions.bodySizeLimit: '10mb'` en `next.config.ts` para permitir la subida de fotos de perfil, logotipos y portadas de alta resolución sin superar el límite por defecto de 1 MB de Next.js.
 
 ### [2026-06-11] - Lanzamiento Inicial
 - Creación de base de datos (`supabase_schema.sql`).
