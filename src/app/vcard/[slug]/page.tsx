@@ -13,7 +13,7 @@ export async function generateMetadata({
   
   const { data: vcard } = await supabase
     .from('vcards')
-    .select('first_name, last_name, company')
+    .select('first_name, last_name, company, profile_image_url, theme_color')
     .eq('slug', slug)
     .single()
 
@@ -30,8 +30,16 @@ export async function generateMetadata({
     ? (fullName ? `${fullName} - ${company}` : company)
     : (fullName || 'vCard')
 
+  const initials = `${vcard.first_name?.[0] || ''}${vcard.last_name?.[0] || ''}`.toUpperCase()
+  const themeColor = encodeURIComponent(vcard.theme_color || '#24744C')
+  const imageUrl = vcard.profile_image_url ? encodeURIComponent(vcard.profile_image_url) : ''
+  const iconUrl = `/api/vcard/${slug}/icon?u=${imageUrl}&t=${themeColor}&n=${encodeURIComponent(initials)}`
+
   return {
-    title
+    title,
+    icons: {
+      icon: iconUrl
+    }
   }
 }
 
