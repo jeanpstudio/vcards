@@ -1,6 +1,40 @@
 import React from 'react'
 import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
+
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const supabase = await createClient()
+  
+  const { data: vcard } = await supabase
+    .from('vcards')
+    .select('first_name, last_name, company')
+    .eq('slug', slug)
+    .single()
+
+  if (!vcard) {
+    return {
+      title: 'vCard no encontrada'
+    }
+  }
+
+  const fullName = `${vcard.first_name || ''} ${vcard.last_name || ''}`.trim()
+  const company = vcard.company || ''
+  
+  const title = company 
+    ? (fullName ? `${fullName} - ${company}` : company)
+    : (fullName || 'vCard')
+
+  return {
+    title
+  }
+}
+
 import {
   Phone,
   Mail,
