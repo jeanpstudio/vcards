@@ -71,26 +71,20 @@ Este archivo sirve para registrar de forma continua las decisiones arquitectóni
   - **Sitio Web**: Enlace a la URL externa.
   - **Botón Destacado Flotante**: Enlace directo al endpoint de descarga de VCF para añadir el contacto a la agenda del móvil con un solo clic.
 
-### 7. Diseños de Impresión Física y PDF
-- **Ruta**: `/dashboard/print/[id]`.
-- **Componentes**: 
-  - `PrintTab.tsx`: Pestaña interactiva en el Dashboard para previsualizar los formatos físicos en pantalla, gestionar la carga del fondo de la contracara e iniciar el proceso de impresión.
-  - `PrintControls.tsx`: Controles cliente flotantes no imprimibles para disparar `window.print()` nativo y cerrar la pestaña.
-- **Formatos Físicos de Impresión**:
-  - **Fotosheck (Credencial)**: Orientación vertical de `54mm x 86mm`. Muestra foto de perfil circular, nombre grande, cargo, código QR y logo de empresa en el footer.
-  - **Tarjeta de Presentación**: Orientación horizontal de `85mm x 55mm` a doble cara. El frente contiene la foto, datos de contacto y QR, y el dorso muestra el logo, el sitio web y permite una imagen de fondo de contracara personalizada.
-- **Configuración de Impresión por CSS**:
-  - Utiliza reglas `@page` dinámicas basadas en el formato y consultas `@media print` para ocultar controles interactivos, forzar colores de fondo (`print-color-adjust: exact`) y establecer cortes de página perfectos.
+### 7. Bloqueo de URL (Slug) y Selector de Color Hexadecimal
+- **Funcionalidad**:
+  - Para evitar que los códigos QR impresos dejen de funcionar por error, el campo `slug` de la URL está bloqueado (`readOnly`) por defecto cuando se edita una vCard existente.
+  - Se añade un botón "🔑 Desbloquear" que muestra un cuadro de diálogo de advertencia antes de permitir la edición del slug.
+  - El selector de color de tema de la vCard ahora cuenta con un campo de texto editable para ingresar códigos de color hexadecimales manualmente (ej. `#EA580C`) además del selector visual nativo de color.
 
 ---
 
 ## 📅 Registro de Cambios
 
-### [2026-06-12] - Diseños de Impresión Física y Exportación PDF
-- **Base de Datos**: Agregada columna `card_back_bg_url` a la tabla `vcards` para almacenar fondos personalizados del reverso de la tarjeta.
-- **Acciones y Utilidades**: Implementado soporte para tipo de imagen `'card_bg'` (procesado con Jimp a `1016x638` píxeles) y server actions `updateCardBackBg` y `deleteCardBackBg` para gestionar el fondo.
-- **Panel de Administración (Dashboard)**: Integrado sistema de pestañas interactivo (`?tab=digital` y `?tab=print`) con selector de vCards, previsualizaciones a escala real con colores derivados (original, claro y oscuro en HSL) y cargador de fondo.
-- **Ruta de Impresión**: Creado [`src/app/dashboard/print/[id]/page.tsx`] con soporte para `?type=badge` y `?type=card` aplicando estilos CSS milimétricos exactos para impresión nativa sin librerías pesadas y con auto-disparo de `window.print()`.
+### [2026-06-12] - Simplificación del Panel, Bloqueo de Slug y Color Manual
+- **Eliminación de Imprimibles**: Removido por completo el módulo de impresión de Fotosheck y Tarjetas de Presentación físicas (rutas `/print/[id]`, componente `PrintTab.tsx` y Server Actions asociadas). El Dashboard ahora muestra directamente la lista de Tarjetas Digitales.
+- **Bloqueo Inteligente de Slug**: Se protegió el slug de la vCard durante la edición mediante un bloqueo por defecto y popup de confirmación/advertencia si se desea desbloquear (para proteger la vigencia de códigos QR compartidos/impresos).
+- **Selector de Color Hexadecimal**: Se reemplazó el texto estático de color por un `<input type="text">` editable al lado del picker visual, permitiendo la personalización con códigos de color exactos en el formulario de creación/edición.
 
 ### [2026-06-11] - Lanzamiento Inicial
 - Creación de base de datos (`supabase_schema.sql`).

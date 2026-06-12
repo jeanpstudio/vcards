@@ -50,6 +50,17 @@ export default function VCardForm({ initialData }: VCardFormProps) {
   const [lastName, setLastName] = useState(initialData?.last_name || '')
   const [slug, setSlug] = useState(initialData?.slug || '')
   const [isSlugManual, setIsSlugManual] = useState(!!initialData?.slug)
+  const [isSlugLocked, setIsSlugLocked] = useState(!!initialData?.id)
+
+  const handleUnlockSlug = () => {
+    const confirmChange = window.confirm(
+      "⚠️ ADVERTENCIA: Si cambias el slug (URL), el código QR actual que hayas impreso o compartido DEJARÁ DE FUNCIONAR y tendrás que descargar uno nuevo. ¿Estás seguro de que deseas cambiar la URL?"
+    )
+    if (confirmChange) {
+      setIsSlugLocked(false)
+      setIsSlugManual(true)
+    }
+  }
 
   const [profileImage, setProfileImage] = useState(initialData?.profile_image_url || '')
   const [companyLogo, setCompanyLogo] = useState(initialData?.company_logo_url || '')
@@ -253,9 +264,21 @@ export default function VCardForm({ initialData }: VCardFormProps) {
                   required
                   value={slug}
                   onChange={handleSlugChange}
+                  readOnly={isSlugLocked}
                   placeholder="ej-juan-perez"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all text-sm"
+                  className={`w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all text-sm ${
+                    isSlugLocked ? 'bg-slate-100/80 text-slate-500 cursor-not-allowed border-slate-200/60 pr-24' : 'pr-4'
+                  }`}
                 />
+                {initialData?.id && isSlugLocked && (
+                  <button
+                    type="button"
+                    onClick={handleUnlockSlug}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors cursor-pointer select-none"
+                  >
+                    🔑 Desbloquear
+                  </button>
+                )}
               </div>
               <p className="text-xs text-indigo-600 font-semibold truncate">
                 Vista previa de la URL: {hostUrl}/vcard/{slug || '...'}
@@ -599,12 +622,21 @@ export default function VCardForm({ initialData }: VCardFormProps) {
                 <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-2.5">
                   <input
                     type="color"
-                    name="theme_color"
                     value={themeColor}
                     onChange={(e) => setThemeColor(e.target.value)}
-                    className="w-8 h-8 rounded-lg cursor-pointer border-0 bg-transparent"
+                    className="w-8 h-8 rounded-lg cursor-pointer border-0 bg-transparent shrink-0"
                   />
-                  <span className="text-xs font-mono font-bold text-slate-600 uppercase">{themeColor}</span>
+                  <input
+                    type="text"
+                    name="theme_color"
+                    value={themeColor}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      setThemeColor(value)
+                    }}
+                    placeholder="#24744C"
+                    className="w-24 bg-transparent border-0 text-xs font-mono font-bold text-slate-600 uppercase focus:outline-none focus:ring-0 p-0"
+                  />
                 </div>
 
                 {/* Paletas de colores rápidas */}

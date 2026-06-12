@@ -18,15 +18,8 @@ import {
 import CopyButton from './CopyButton'
 import DeleteButton from './DeleteButton'
 import DuplicateButton from './DuplicateButton'
-import PrintTab from './PrintTab'
 
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ tab?: string }>
-}) {
-  const { tab } = await searchParams
-  const activeTab = tab || 'digital'
+export default async function DashboardPage() {
   const supabase = await createClient()
 
   // 1. Obtener usuario autenticado
@@ -138,174 +131,144 @@ export default async function DashboardPage({
           </Link>
         </div>
 
-        {/* Pestañas de Navegación */}
-        <div className="flex border-b border-slate-200 mb-8 select-none">
-          <Link
-            href="/dashboard?tab=digital"
-            className={`px-5 py-3 text-sm font-bold border-b-2 transition-all cursor-pointer ${
-              activeTab === 'digital'
-                ? 'border-indigo-600 text-indigo-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            Tarjetas Digitales
-          </Link>
-          <Link
-            href="/dashboard?tab=print"
-            className={`px-5 py-3 text-sm font-bold border-b-2 transition-all cursor-pointer ${
-              activeTab === 'print'
-                ? 'border-indigo-600 text-indigo-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            Diseño de Impresión (PDF)
-          </Link>
-        </div>
-
-        {activeTab === 'print' ? (
-          <PrintTab vcards={vcardsWithQR} />
+        {/* Listado / Grid */}
+        {vcardsWithQR.length === 0 ? (
+          // Vista vacía (Onboarding)
+          <div className="bg-white border border-slate-100 rounded-3xl p-12 text-center max-w-xl mx-auto shadow-md">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 mb-6 shadow-sm">
+              <Sparkles className="h-8 w-8" />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900">No tienes vCards creadas</h2>
+            <p className="text-slate-500 text-sm mt-3 mb-8 leading-relaxed">
+              Comienza a digitalizar tus contactos. Crea tu primera vCard y genera su código QR dinámico de manera instantánea.
+            </p>
+            <Link href="/dashboard/new">
+              <Button size="lg" className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white px-8 font-semibold w-full sm:w-auto shadow-md cursor-pointer">
+                <Plus className="mr-2 h-4 w-4" /> Crear mi primera vCard
+              </Button>
+            </Link>
+          </div>
         ) : (
-          <>
-            {/* Listado / Grid */}
-            {vcardsWithQR.length === 0 ? (
-              // Vista vacía (Onboarding)
-              <div className="bg-white border border-slate-100 rounded-3xl p-12 text-center max-w-xl mx-auto shadow-md">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 mb-6 shadow-sm">
-                  <Sparkles className="h-8 w-8" />
-                </div>
-                <h2 className="text-2xl font-bold text-slate-900">No tienes vCards creadas</h2>
-                <p className="text-slate-500 text-sm mt-3 mb-8 leading-relaxed">
-                  Comienza a digitalizar tus contactos. Crea tu primera vCard y genera su código QR dinámico de manera instantánea.
-                </p>
-                <Link href="/dashboard/new">
-                  <Button size="lg" className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white px-8 font-semibold w-full sm:w-auto shadow-md cursor-pointer">
-                    <Plus className="mr-2 h-4 w-4" /> Crear mi primera vCard
-                  </Button>
-                </Link>
-              </div>
-            ) : (
-              // Grid de vCards
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                {vcardsWithQR.map((vcard) => (
-                  <div
-                    key={vcard.id}
-                    className="group relative bg-white border border-slate-100 rounded-3xl p-6 flex flex-col justify-between hover:border-slate-200 transition-all duration-300 shadow-sm hover:shadow-md"
-                  >
-                    <div>
-                      {/* Fila superior: Avatar y datos */}
-                      <div className="flex justify-between items-start gap-4 mb-6">
-                        <div className="flex items-center gap-4">
-                          {/* Foto */}
-                          <div className="w-14 h-14 rounded-full bg-slate-100 border border-slate-150 overflow-hidden flex items-center justify-center shrink-0 shadow-inner">
-                            {vcard.profile_image_url ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={vcard.profile_image_url}
-                                alt="Perfil"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <User className="h-6 w-6 text-slate-400" />
-                            )}
-                          </div>
-                          <div>
-                            <h3 className="font-bold text-lg text-slate-800 transition-colors">
-                              {vcard.first_name} {vcard.last_name}
-                            </h3>
-                            <p className="text-xs text-slate-500 font-medium">
-                              {vcard.job_title || 'Sin cargo'}
-                            </p>
-                            {vcard.company && (
-                              <p
-                                className="text-[10px] font-bold uppercase tracking-wider mt-1 px-2 py-0.5 rounded-full inline-block"
-                                style={{
-                                  backgroundColor: `${vcard.theme_color || '#24744C'}15`,
-                                  color: vcard.theme_color || '#24744C'
-                                }}
-                              >
-                                {vcard.company}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* QR Code Container */}
-                      <div className="flex flex-col items-center py-6 bg-slate-50 rounded-2xl border border-slate-100 mb-6">
-                        {vcard.qrCodeUrl ? (
+          // Grid de vCards
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {vcardsWithQR.map((vcard) => (
+              <div
+                key={vcard.id}
+                className="group relative bg-white border border-slate-100 rounded-3xl p-6 flex flex-col justify-between hover:border-slate-200 transition-all duration-300 shadow-sm hover:shadow-md"
+              >
+                <div>
+                  {/* Fila superior: Avatar y datos */}
+                  <div className="flex justify-between items-start gap-4 mb-6">
+                    <div className="flex items-center gap-4">
+                      {/* Foto */}
+                      <div className="w-14 h-14 rounded-full bg-slate-100 border border-slate-150 overflow-hidden flex items-center justify-center shrink-0 shadow-inner">
+                        {vcard.profile_image_url ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
-                            src={vcard.qrCodeUrl}
-                            alt={`QR Code para ${vcard.slug}`}
-                            className="w-40 h-40 rounded-xl bg-white p-2 border border-slate-150 shadow-sm group-hover:scale-105 transition-transform duration-300"
+                            src={vcard.profile_image_url}
+                            alt="Perfil"
+                            className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-40 h-40 flex items-center justify-center bg-slate-100 border border-slate-200 rounded-xl">
-                            <span className="text-xs text-slate-400">QR No Disponible</span>
-                          </div>
+                          <User className="h-6 w-6 text-slate-400" />
                         )}
-                        
-                        {/* Public Slug Link */}
-                        <span className="text-[10px] font-mono font-semibold text-slate-400 mt-4 truncate max-w-full px-4">
-                          /vcard/{vcard.slug}
-                        </span>
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-lg text-slate-800 transition-colors">
+                          {vcard.first_name} {vcard.last_name}
+                        </h3>
+                        <p className="text-xs text-slate-500 font-medium">
+                          {vcard.job_title || 'Sin cargo'}
+                        </p>
+                        {vcard.company && (
+                          <p
+                            className="text-[10px] font-bold uppercase tracking-wider mt-1 px-2 py-0.5 rounded-full inline-block"
+                            style={{
+                              backgroundColor: `${vcard.theme_color || '#24744C'}15`,
+                              color: vcard.theme_color || '#24744C'
+                            }}
+                          >
+                            {vcard.company}
+                          </p>
+                        )}
                       </div>
                     </div>
-
-                    {/* Acciones */}
-                    <div>
-                      <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                        <div className="flex items-center gap-2">
-                          {/* Ver link publico */}
-                          <Link
-                            href={`/vcard/${vcard.slug}`}
-                            target="_blank"
-                            className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-all cursor-pointer"
-                            title="Ver vCard pública"
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                          </Link>
-
-                          {/* Copiar URL */}
-                          <CopyButton url={vcard.publicUrl} />
-
-                          {/* Descargar QR */}
-                          {vcard.qrCodeUrl && (
-                            <a
-                              href={vcard.qrCodeUrl}
-                              download={`QR_${vcard.slug}.png`}
-                              className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-all cursor-pointer"
-                              title="Descargar código QR"
-                            >
-                              <Download className="h-4 w-4" />
-                            </a>
-                          )}
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          {/* Duplicar */}
-                          <DuplicateButton id={vcard.id} />
-
-                          {/* Editar */}
-                          <Link
-                            href={`/dashboard/edit/${vcard.id}`}
-                            className="p-2 rounded-xl bg-indigo-50 hover:bg-indigo-100/50 border border-indigo-100 text-indigo-600 hover:text-indigo-700 transition-all cursor-pointer"
-                            title="Editar vCard"
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Link>
-
-                          {/* Eliminar */}
-                          <DeleteButton id={vcard.id} />
-                        </div>
-                      </div>
-                    </div>
-
                   </div>
-                ))}
+
+                  {/* QR Code Container */}
+                  <div className="flex flex-col items-center py-6 bg-slate-50 rounded-2xl border border-slate-100 mb-6">
+                    {vcard.qrCodeUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={vcard.qrCodeUrl}
+                        alt={`QR Code para ${vcard.slug}`}
+                        className="w-40 h-40 rounded-xl bg-white p-2 border border-slate-150 shadow-sm group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-40 h-40 flex items-center justify-center bg-slate-100 border border-slate-200 rounded-xl">
+                        <span className="text-xs text-slate-400">QR No Disponible</span>
+                      </div>
+                    )}
+                    
+                    {/* Public Slug Link */}
+                    <span className="text-[10px] font-mono font-semibold text-slate-400 mt-4 truncate max-w-full px-4">
+                      /vcard/{vcard.slug}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Acciones */}
+                <div>
+                  <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                    <div className="flex items-center gap-2">
+                      {/* Ver link publico */}
+                      <Link
+                        href={`/vcard/${vcard.slug}`}
+                        target="_blank"
+                        className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-all cursor-pointer"
+                        title="Ver vCard pública"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </Link>
+
+                      {/* Copiar URL */}
+                      <CopyButton url={vcard.publicUrl} />
+
+                      {/* Descargar QR */}
+                      {vcard.qrCodeUrl && (
+                        <a
+                          href={vcard.qrCodeUrl}
+                          download={`QR_${vcard.slug}.png`}
+                          className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 transition-all cursor-pointer"
+                          title="Descargar código QR"
+                        >
+                          <Download className="h-4 w-4" />
+                        </a>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {/* Duplicar */}
+                      <DuplicateButton id={vcard.id} />
+
+                      {/* Editar */}
+                      <Link
+                        href={`/dashboard/edit/${vcard.id}`}
+                        className="p-2 rounded-xl bg-indigo-50 hover:bg-indigo-100/50 border border-indigo-100 text-indigo-600 hover:text-indigo-700 transition-all cursor-pointer"
+                        title="Editar vCard"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Link>
+
+                      {/* Eliminar */}
+                      <DeleteButton id={vcard.id} />
+                    </div>
+                  </div>
+                </div>
+
               </div>
-            )}
-          </>
+            ))}
+          </div>
         )}
       </main>
     </div>

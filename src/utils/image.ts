@@ -8,7 +8,7 @@ import { createClient } from '@/utils/supabase/server'
  */
 export async function uploadAndOptimizeImage(
   file: File,
-  type: 'avatar' | 'logo' | 'bg' | 'card_bg',
+  type: 'avatar' | 'logo' | 'bg',
   userId: string
 ): Promise<string | null> {
   // Validar si el archivo es válido
@@ -30,9 +30,6 @@ export async function uploadAndOptimizeImage(
       if (image.width > maxWidth || image.height > maxHeight) {
         image.scaleToFit({ w: maxWidth, h: maxHeight })
       }
-    } else if (type === 'card_bg') {
-      // Fondo de reverso de tarjeta: recortar a 1016x638 (proporción 85.6mm x 53.98mm)
-      image.cover({ w: 1016, h: 638 })
     } else {
       // Fondo de portada: redimensionar a max 1200x600 conservando aspecto
       const maxWidth = 1200
